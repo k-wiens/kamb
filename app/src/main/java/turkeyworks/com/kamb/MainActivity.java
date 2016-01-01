@@ -4,10 +4,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final String TAG = "MainActivity";
 
     private String PREF_NAME = "kamb";
     private String PREF_VP = "victoryPoints";
@@ -112,16 +116,34 @@ public class MainActivity extends AppCompatActivity {
         // TODO: check with user if they want 7 points with an Ego of 5
         int skillCount = Math.min(iEgo, 6);
 
+        //region Update UI
 
+        setTextViewValue(R.id.brawn_value,  Integer.toString(iBrawn));
+        setTextViewValue(R.id.ego_value,    Integer.toString(iEgo));
+        setTextViewValue(R.id.reflex_value, Integer.toString(iReflexes));
+        setTextViewValue(R.id.extra_value,  Integer.toString(iExtraneous));
+
+        setTextViewValue(R.id.meat_value,    Integer.toString(iMeat));
+        setTextViewValue(R.id.agility_value, Integer.toString(iAgility));
+        setTextViewValue(R.id.luck_value,    Integer.toString(iLuck));
+        setTextViewValue(R.id.cunning_value, Integer.toString(iCunning));
+
+        //endregion
     }
 
-    public void saveVictoryPoints(int num) {
+    private void setTextViewValue(int id, String text) {
+        TextView v = (TextView) findViewById(id);
+        if (v != null) v.setText(text);
+        else Log.e(TAG, "Unable to find TextView");
+    }
+
+    private void saveVictoryPoints(int num) {
         SharedPreferences.Editor editor = getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit();
         editor.putInt(PREF_VP, iVictoryPoints);
         editor.apply();
     }
 
-    public void loadVictoryPoints() {
+    private void loadVictoryPoints() {
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         iVictoryPoints = prefs.getInt(PREF_VP, 0); // 0 is the default value.
     }

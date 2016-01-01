@@ -5,4 +5,17 @@
     <!-- Action Menu -->
     <string name="action_settings">Settings</string>
     <string name="action_generate">Generate</string>
+
+    <!-- Character Screen -->
+    <string name="zero">0</string>
+
+    <string name="brawn">Brawn</string>
+    <string name="ego">Ego</string>
+    <string name="reflex">Reflexes</string>
+    <string name="extra">Extra</string>
+
+    <string name="meat">Meat</string>
+    <string name="luck">Luck</string>
+    <string name="cunning">Cunning</string>
+    <string name="agility">Agility</string>
 </resources>

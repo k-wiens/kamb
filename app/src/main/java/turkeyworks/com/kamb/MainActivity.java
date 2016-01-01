@@ -1,5 +1,6 @@
 package turkeyworks.com.kamb;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
+
+    private String PREF_NAME = "kamb";
+    private String PREF_VP = "victoryPoints";
 
     private int iBrawn = 0;
     private int iEgo = 0;
@@ -30,14 +34,16 @@ public class MainActivity extends AppCompatActivity {
 
     private int iDeathStrikes;
 
-    // TODO: this should be stored in local database
-    private int iVictoryPoints = 0;
+    // managed in stored preferences
+    private int iVictoryPoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         this.setTitle("Kobolds Ate My Baby!");
+        loadVictoryPoints();
     }
 
     @Override
@@ -109,5 +115,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void saveVictoryPoints(int num) {
+        SharedPreferences.Editor editor = getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit();
+        editor.putInt(PREF_VP, iVictoryPoints);
+        editor.apply();
+    }
 
+    public void loadVictoryPoints() {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        iVictoryPoints = prefs.getInt(PREF_VP, 0); // 0 is the default value.
+    }
 }

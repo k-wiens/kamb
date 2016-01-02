@@ -23,7 +23,7 @@
                 android:id="@+id/name_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="textFilter"
                 android:hint="@string/not_set"
                 android:textSize="30sp"/>
         </TableRow>
@@ -40,14 +40,13 @@
             android:padding="5dip" >
 
             <TextView
-                android:id="@+id/vp_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/victory_points"
+                android:text="@string/hit_points"
                 android:textSize="30sp"/>
 
             <EditText
-                android:id="@+id/vp_value"
+                android:id="@+id/hp_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -61,7 +60,6 @@
             android:padding="5dip" >
 
             <TextView
-                android:id="@+id/ds_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/death_strikes"
@@ -73,6 +71,26 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:text="@string/zero"
+                android:textSize="30sp"/>
+        </TableRow>
+
+        <!-- 2 columns -->
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/victory_points"
+                android:textSize="30sp"/>
+
+            <EditText
+                android:id="@+id/vp_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
                 android:textSize="30sp"/>
         </TableRow>
     </TableLayout>

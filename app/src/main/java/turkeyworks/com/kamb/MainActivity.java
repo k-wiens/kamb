@@ -162,7 +162,8 @@ public class MainActivity extends AppCompatActivity {
         setTextViewValue(R.id.bogey2, sBogey2);
 
         setTextViewValue(R.id.name_value, "");
-        setTextViewValue(R.id.ds_value,   Integer.toString(iDeathStrikes));
+        setTextViewValue(R.id.ds_value, Integer.toString(iDeathStrikes));
+        setTextViewValue(R.id.hp_value, Integer.toString(hit_points));
 
         setTextViewValue(R.id.armour_value, armour);
         setTextViewValue(R.id.r_paw_value, right_paw);

@@ -7,13 +7,25 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import turkeyworks.com.kamb.Objects.BaseItem;
+import turkeyworks.com.kamb.Objects.MyTextView;
+import turkeyworks.com.kamb.Objects.Skill;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,11 +68,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) { }
+                                      int count) {
+            }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) { }
+                                          int after) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -111,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         iEgo        = Utils.roll(6) + Utils.roll(6);
         iExtraneous = Utils.roll(6) + Utils.roll(6);
         iReflexes   = Utils.roll(6) + Utils.roll(6);
+        int hit_points = iBrawn;
 
         // derive abilities
         iMeat    = Utils.getAbility(iBrawn);
@@ -128,9 +143,34 @@ public class MainActivity extends AppCompatActivity {
         sBogey2 = Lookup.getRandomBogey();
         while(sBogey1.equals(sBogey2)) sBogey2 = Lookup.getRandomEdge();
 
+
         // pick skills
+        //region Skills
+
         // TODO: check with user if they want 7 points with an Ego of 5
+        // TODO: check with user if they always want to take Cook
+
+        boolean takeSeven = false;
+        boolean takeCook = true;
+
+        Skill.init(takeCook);
+        ArrayList<Skill> skills = new ArrayList<>();
+
         int skillCount = Math.min(iEgo, 6);
+        if (takeSeven && skillCount == 5) skillCount = 7;
+        ArrayList<String> cats = new ArrayList<>(Arrays.asList("Brawn", "Ego", "Reflexes"));
+        if (!takeCook) cats.add("Extra");
+        else           skills.add(Skill.getCookSkill());
+
+        for (int i = 0; i < cats.size() && i < skillCount; i++) {
+            skills.add(Skill.getRandomSkill(cats.get(i)));
+        }
+
+        for (int i = 4; i < skillCount; i++ ) {
+            skills.add(Skill.getRandomSkill());
+        }
+
+        //endregion
 
         boolean pickSafe = Utils.roll(2) == 1;
         armour = Lookup.getRandomArmour(pickSafe);
@@ -169,6 +209,41 @@ public class MainActivity extends AppCompatActivity {
         setTextViewValue(R.id.r_paw_value, right_paw);
         setTextViewValue(R.id.w_paw_value, wrong_paw);
 
+        LinearLayout v = (LinearLayout)findViewById(R.id.skills_layout);
+        v.removeAllViews();
+
+        TextView tv = new TextView(this);
+        tv.setText("Skills");
+        tv.setTextSize(30);
+        v.addView(tv);
+
+        // Auto-generate the skill textviews
+        for (Skill s : skills) {
+
+            MyTextView mtv = new MyTextView(this, s);
+
+            SpannableString span1 = new SpannableString(s.getName());
+            int textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 30F, this.getResources().getDisplayMetrics());
+            span1.setSpan(new AbsoluteSizeSpan(textSize), 0, s.getName().length(), 0);
+
+            String st = "(" + s.getAbility() + ")";
+            SpannableString span2 = new SpannableString(st);
+            textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 20F, this.getResources().getDisplayMetrics());
+            span2.setSpan(new AbsoluteSizeSpan(textSize), 0, st.length(), 0);
+
+            // let's put both spans together with a separator and all
+            mtv.setText(TextUtils.concat(span1, " ", span2));
+
+            mtv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showItemInfo(v);
+                }
+            });
+
+            v.addView(mtv);
+        }
+
         //endregion
     }
 
@@ -199,5 +274,21 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.setTitle(title);
         alertDialog.setMessage(info);
         alertDialog.show();
+    }
+
+    public void showItemInfo(View view) {
+        BaseItem item = ((MyTextView) view).getItem();
+        String title = item.getName();
+        String info = item.getDescription();
+
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(info);
+        alertDialog.show();
+    }
+
+    // adjust stats if gear allows for it
+    private void adjustStats() {
+        // TODO: adjust stats based on gear
     }
 }

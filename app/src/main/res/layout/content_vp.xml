@@ -1,48 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <!-- 2 columns -->
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dip" >
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/vp_title"
+        <!-- 2 columns -->
+        <TableRow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/victory_points"
-            android:textSize="30sp"/>
+            android:padding="5dip" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name"
+                android:textSize="30sp"/>
 
-        <EditText
-            android:id="@+id/vp_value"
+            <EditText
+                android:id="@+id/name_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/not_set"
+                android:textSize="30sp"/>
+        </TableRow>
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <!-- 2 columns -->
+        <TableRow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:textSize="30sp"/>
-    </TableRow>
+            android:padding="5dip" >
 
-    <!-- 2 columns -->
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="5dip" >
+            <TextView
+                android:id="@+id/vp_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/victory_points"
+                android:textSize="30sp"/>
 
-        <TextView
-            android:id="@+id/ds_title"
+            <EditText
+                android:id="@+id/vp_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textSize="30sp"/>
+        </TableRow>
+
+        <!-- 2 columns -->
+        <TableRow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/death_strikes"
-            android:textSize="30sp"/>
+            android:padding="5dip" >
 
-        <EditText
-            android:id="@+id/ds_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:text="@string/zero"
-            android:textSize="30sp"/>
-    </TableRow>
-</TableLayout>
+            <TextView
+                android:id="@+id/ds_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/death_strikes"
+                android:textSize="30sp"/>
+
+            <EditText
+                android:id="@+id/ds_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:text="@string/zero"
+                android:textSize="30sp"/>
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

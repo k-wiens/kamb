@@ -1,6 +1,5 @@
 package turkeyworks.com.kamb;
 
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -37,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private String sBogey1;
     private String sBogey2;
 
-    private String name;
     private String right_paw;
     private String wrong_paw;
     private String armour;
@@ -98,10 +96,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (id == R.id.action_generate) {
             generateCharacter();
-
-            // TODO: remove this snackbar once we have a UI
-            Snackbar.make(findViewById(R.id.toolbar), "Generate Character", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
             return true;
         }
 
@@ -155,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
         setTextViewValue(R.id.bogey1, sBogey1);
         setTextViewValue(R.id.bogey2, sBogey2);
 
-        setTextViewValue(R.id.ds_value, Integer.toString(iDeathStrikes));
+        setTextViewValue(R.id.name_value, "");
+        setTextViewValue(R.id.ds_value,   Integer.toString(iDeathStrikes));
 
         //endregion
     }

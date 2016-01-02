@@ -27,6 +27,7 @@
 
     <string name="skills">Skills</string>
 
+    <string name="name">Name:</string>
     <string name="victory_points">Victory Points:</string>
     <string name="death_strikes">Death Strikes:</string>
 </resources>

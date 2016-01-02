@@ -132,6 +132,18 @@ public class MainActivity extends AppCompatActivity {
         // TODO: check with user if they want 7 points with an Ego of 5
         int skillCount = Math.min(iEgo, 6);
 
+        boolean pickSafe = Utils.roll(2) == 1;
+        armour = Lookup.getRandomArmour(pickSafe);
+        adjustStats();
+
+        pickSafe = Utils.roll(2) == 1;
+        right_paw = Lookup.getRandomWeapon(pickSafe);
+        adjustStats();
+
+        pickSafe = Utils.roll(2) == 1;
+        right_paw = Lookup.getRandomGear(pickSafe);
+        adjustStats();
+
         //region Update UI
 
         setTextViewValue(R.id.brawn_value,  Integer.toString(iBrawn));
@@ -151,6 +163,10 @@ public class MainActivity extends AppCompatActivity {
 
         setTextViewValue(R.id.name_value, "");
         setTextViewValue(R.id.ds_value,   Integer.toString(iDeathStrikes));
+
+        setTextViewValue(R.id.armour_value, armour);
+        setTextViewValue(R.id.r_paw_value, right_paw);
+        setTextViewValue(R.id.w_paw_value, wrong_paw);
 
         //endregion
     }

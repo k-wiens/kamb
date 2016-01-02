@@ -66,6 +66,15 @@
 
             <include layout="@layout/content_vp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@android:color/white"/>
+
+            <include layout="@layout/content_gear" />
+
         </LinearLayout>
     </ScrollView>
 

@@ -30,4 +30,8 @@
     <string name="name">Name:</string>
     <string name="victory_points">Victory Points:</string>
     <string name="death_strikes">Death Strikes:</string>
+
+    <string name="armour">Armour:</string>
+    <string name="right_paw">Right Paw:</string>
+    <string name="wrong_paw">Wrong Paw:</string>
 </resources>

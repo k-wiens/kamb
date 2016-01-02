@@ -42,4 +42,16 @@ public class Lookup {
 
         return "No information available.";
     }
+
+    public static String getRandomArmour(boolean pickSafe) {
+        return "";
+    }
+
+    public static String getRandomWeapon(boolean pickSafe) {
+        return "";
+    }
+
+    public static String getRandomGear(boolean pickSafe) {
+        return "";
+    }
 }

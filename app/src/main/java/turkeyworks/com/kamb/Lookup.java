@@ -7,7 +7,7 @@ public class Lookup {
     private final static String[][] Edges = {
             {"Troll Blood", "Heal 2 when you lick yourself for a turn."},
             {"Flame Resistant", "Resist 2 fire damage per turn"},
-            {"Animal Charm", "Animals don't attack unless you attack them."}
+            {"Animal Charm", "Animals don't attack unless you attack them.\n\nSee page 47"}
     };
 
     private final static String[][] Bogeys = {
@@ -24,5 +24,22 @@ public class Lookup {
     public static String getRandomBogey() {
         int roll = Utils.roll(Bogeys.length) - 1;
         return Bogeys[roll][0];
+    }
+
+    public static String getInfo(String s) {
+        if (s.equals("Night Vision"))
+            return "You can see in the dark as well as the day!";
+
+        // check the edges
+        for (String[] edge : Edges) {
+            if (edge[0].equals(s)) return edge[1];
+        }
+
+        // check the bogeys
+        for (String[] bogey : Bogeys) {
+            if (bogey[0].equals(s)) return bogey[1];
+        }
+
+        return "No information available.";
     }
 }

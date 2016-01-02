@@ -1,19 +1,25 @@
 package turkeyworks.com.kamb;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
 
-    private String PREF_NAME = "kamb";
     private String PREF_VP = "victoryPoints";
 
     private int iBrawn = 0;
@@ -38,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     private int iDeathStrikes;
 
-    // managed in stored preferences
-    private int iVictoryPoints;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +51,25 @@ public class MainActivity extends AppCompatActivity {
 
         this.setTitle("Kobolds Ate My Baby!");
         loadVictoryPoints();
+
+        // add text watcher so we know when victory points are changed
+        EditText vp = (EditText) findViewById(R.id.vp_value);
+        vp.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) { }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int points = Integer.parseInt(s.toString());
+                saveVictoryPoints(points);
+            }
+        });
     }
 
     @Override
@@ -128,6 +150,13 @@ public class MainActivity extends AppCompatActivity {
         setTextViewValue(R.id.luck_value,    Integer.toString(iLuck));
         setTextViewValue(R.id.cunning_value, Integer.toString(iCunning));
 
+        setTextViewValue(R.id.edge1, sEdge1);
+        setTextViewValue(R.id.edge2, sEdge2);
+        setTextViewValue(R.id.bogey1, sBogey1);
+        setTextViewValue(R.id.bogey2, sBogey2);
+
+        setTextViewValue(R.id.ds_value, Integer.toString(iDeathStrikes));
+
         //endregion
     }
 
@@ -137,14 +166,26 @@ public class MainActivity extends AppCompatActivity {
         else Log.e(TAG, "Unable to find TextView");
     }
 
-    private void saveVictoryPoints(int num) {
-        SharedPreferences.Editor editor = getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit();
-        editor.putInt(PREF_VP, iVictoryPoints);
+    private void saveVictoryPoints(int points) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(PREF_VP, points);
         editor.apply();
     }
 
     private void loadVictoryPoints() {
-        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        iVictoryPoints = prefs.getInt(PREF_VP, 0); // 0 is the default value.
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int points = prefs.getInt(PREF_VP, 0); // 0 is the default value.
+        setTextViewValue(R.id.vp_value, Integer.toString(points));
+    }
+
+    public void showInfo(View view) {
+        String title = ((TextView) view).getText().toString();
+        String info = Lookup.getInfo(title);
+
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(info);
+        alertDialog.show();
     }
 }

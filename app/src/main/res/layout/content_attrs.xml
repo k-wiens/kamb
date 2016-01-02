@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Edges -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edges"
+        android:textSize="30sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/defaultEdge"
+        android:textSize="30sp"
+        android:onClick="showInfo"/>
+    <TextView
+        android:id="@+id/edge1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_set"
+        android:textSize="30sp"
+        android:onClick="showInfo"/>
+    <TextView
+        android:id="@+id/edge2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_set"
+        android:textSize="30sp"
+        android:onClick="showInfo"/>
+
+    <!-- Bogeys -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/bogeys"
+        android:textSize="30sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/defaultBogey"
+        android:textSize="30sp"
+        android:onClick="showInfo"/>
+    <TextView
+        android:id="@+id/bogey1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_set"
+        android:textSize="30sp"
+        android:onClick="showInfo"/>
+    <TextView
+        android:id="@+id/bogey2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_set"
+        android:textSize="30sp"
+        android:onClick="showInfo"/>
+</LinearLayout>

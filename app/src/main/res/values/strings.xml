@@ -8,6 +8,7 @@
 
     <!-- Character Screen -->
     <string name="zero">0</string>
+    <string name="not_set">--Not Set--</string>
 
     <string name="brawn">Brawn</string>
     <string name="ego">Ego</string>
@@ -18,4 +19,14 @@
     <string name="luck">Luck</string>
     <string name="cunning">Cunning</string>
     <string name="agility">Agility</string>
+
+    <string name="edges"><u>Edges</u></string>
+    <string name="bogeys"><u>Bogeys</u></string>
+    <string name="defaultEdge">Night Vision</string>
+    <string name="defaultBogey">Stupid as Heck</string>
+
+    <string name="skills">Skills</string>
+
+    <string name="victory_points">Victory Points:</string>
+    <string name="death_strikes">Death Strikes:</string>
 </resources>

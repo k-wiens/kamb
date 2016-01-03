@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String PREF_VP = "victoryPoints";
 
+    private int iMaxHP = 0;
+
     private int iMeat    = 0;
     private int iCunning = 0;
     private int iLuck    = 0;
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         int ego      = Utils.roll(6) + Utils.roll(6);
         int extra    = Utils.roll(6) + Utils.roll(6);
         int reflexes = Utils.roll(6) + Utils.roll(6);
-        int hit_points = brawn;
+        iMaxHP = brawn;
 
         // derive abilities
         iMeat    = Utils.getAbility(brawn);
@@ -222,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
         setTextViewValue(R.id.name_value, "");
         setTextViewValue(R.id.ds_value, Integer.toString(iDeathStrikes));
-        setTextViewValue(R.id.hp_value, Integer.toString(hit_points));
+        setTextViewValue(R.id.hp_value, Integer.toString(iMaxHP));
 
         //region Gear
 
@@ -327,7 +329,8 @@ public class MainActivity extends AppCompatActivity {
 
         //endregion
 
-        showDeathStrikes();
+        // TODO: enable this for release version
+        //showDeathStrikes();
     }
 
     private void setTextViewValue(int id, String text) {
@@ -392,8 +395,8 @@ public class MainActivity extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
                 .setTitle("Death Strike!")
-                .setMessage(strike.getReason() + "\n\nModifier: " + strike.getModifier() +
-                        "\n\nRoll a 13 or less to live")
+                .setMessage("Cause: " + strike.getReason() + "\n\nModifier: " + strike.getModifier() +
+                        "\n\nRoll 2d6 and get 13 or less to live")
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton("Life", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -406,4 +409,51 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).show();
     }
+
+    // region Value Modifiers
+
+    // TODO: armour needs hit points too
+    // TODO: if armour still has hit points, warn user if they modify actual hit points
+
+    public void addHP(View view) {
+        String hp_text = ((TextView) findViewById(R.id.hp_value)).getText().toString();
+        int hp = Integer.parseInt(hp_text);
+        setTextViewValue(R.id.hp_value, Integer.toString(Math.min(++hp, iMaxHP)));
+    }
+
+    public void loseHP(View view) {
+        String hp_text = ((TextView) findViewById(R.id.hp_value)).getText().toString();
+        int hp = Integer.parseInt(hp_text);
+        setTextViewValue(R.id.hp_value, Integer.toString(Math.max(--hp, 0)));
+    }
+
+    public void addDeathStrike(View view) {
+        String ds_text = ((TextView) findViewById(R.id.ds_value)).getText().toString();
+        int ds = Integer.parseInt(ds_text);
+        setTextViewValue(R.id.ds_value, Integer.toString(++ds));
+
+        // alert user to roll death check
+        addDeathStrike("User action");
+        showDeathStrikes();
+    }
+
+    public void loseDeathStrike(View view) {
+        String ds_text = ((TextView) findViewById(R.id.ds_value)).getText().toString();
+        int ds = Integer.parseInt(ds_text);
+        setTextViewValue(R.id.ds_value, Integer.toString(Math.max(--ds, 0)));
+    }
+
+    public void addVP(View view) {
+        String vp_text = ((TextView) findViewById(R.id.vp_value)).getText().toString();
+        int vp = Integer.parseInt(vp_text);
+        setTextViewValue(R.id.vp_value, Integer.toString(++vp));
+    }
+
+    public void loseVP(View view) {
+        String vp_text = ((TextView) findViewById(R.id.vp_value)).getText().toString();
+        int vp = Integer.parseInt(vp_text);
+        setTextViewValue(R.id.vp_value, Integer.toString(Math.max(--vp, 0)));
+    }
+
+    // endregion
 }

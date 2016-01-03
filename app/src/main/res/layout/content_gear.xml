@@ -24,7 +24,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/not_set"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:onClick="showInfo"/>
         </TableRow>
     </TableLayout>
 
@@ -49,7 +50,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/not_set"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:onClick="showInfo"/>
         </TableRow>
 
         <!-- 2 columns -->
@@ -69,7 +71,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/not_set"
-                android:textSize="30sp"/>
+                android:textSize="30sp"
+                android:onClick="showInfo"/>
         </TableRow>
     </TableLayout>
 </LinearLayout>

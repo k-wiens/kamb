@@ -1,5 +1,7 @@
-package turkeyworks.com.kamb;
+package turkeyworks.com.kamb.presentation;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -7,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,24 +22,27 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
+import turkeyworks.com.kamb.Lookup;
 import turkeyworks.com.kamb.Objects.BaseItem;
+import turkeyworks.com.kamb.Objects.DeathStrike;
 import turkeyworks.com.kamb.Objects.MyTextView;
 import turkeyworks.com.kamb.Objects.Skill;
+import turkeyworks.com.kamb.R;
+import turkeyworks.com.kamb.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "MainActivity";
 
     private String PREF_VP = "victoryPoints";
-
-    private int iBrawn = 0;
-    private int iEgo = 0;
-    private int iExtraneous = 0;
-    private int iReflexes = 0;
 
     private int iMeat    = 0;
     private int iCunning = 0;
@@ -53,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private String armour;
 
     private int iDeathStrikes;
+    private ArrayList<DeathStrike> mDeathStrikes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +107,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-
-            Snackbar.make(findViewById(R.id.toolbar), "Show Settings Activity", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-
-     //       Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-      //      startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
         else if (id == R.id.action_generate) {
@@ -119,19 +122,20 @@ public class MainActivity extends AppCompatActivity {
     private void generateCharacter() {
 
         iDeathStrikes = 0;
+        mDeathStrikes = new ArrayList<>();
 
         // generate stats
-        iBrawn      = Utils.roll(6) + Utils.roll(6);
-        iEgo        = Utils.roll(6) + Utils.roll(6);
-        iExtraneous = Utils.roll(6) + Utils.roll(6);
-        iReflexes   = Utils.roll(6) + Utils.roll(6);
-        int hit_points = iBrawn;
+        int brawn    = Utils.roll(6) + Utils.roll(6);
+        int ego      = Utils.roll(6) + Utils.roll(6);
+        int extra    = Utils.roll(6) + Utils.roll(6);
+        int reflexes = Utils.roll(6) + Utils.roll(6);
+        int hit_points = brawn;
 
         // derive abilities
-        iMeat    = Utils.getAbility(iBrawn);
-        iCunning = Utils.getAbility(iEgo);
-        iLuck    = Utils.getAbility(iExtraneous);
-        iAgility = Utils.getAbility(iReflexes);
+        iMeat    = Utils.getAbility(brawn);
+        iCunning = Utils.getAbility(ego);
+        iLuck    = Utils.getAbility(extra);
+        iAgility = Utils.getAbility(reflexes);
 
         // get edges
         sEdge1 = Lookup.getRandomEdge();
@@ -154,42 +158,52 @@ public class MainActivity extends AppCompatActivity {
         boolean takeCook = true;
 
         Skill.init(takeCook);
-        ArrayList<Skill> skills = new ArrayList<>();
+        List<Skill> skills = new ArrayList<>();
 
-        int skillCount = Math.min(iEgo, 6);
-        if (takeSeven && skillCount == 5) skillCount = 7;
+        int skillCount = Math.min(ego, 6);
+        if (takeSeven && skillCount == 5) {
+            skillCount = 7;
+            addDeathStrike("Taking 7 skill points from 5 Ego");
+        }
+
         ArrayList<String> cats = new ArrayList<>(Arrays.asList("Brawn", "Ego", "Reflexes"));
         if (!takeCook) cats.add("Extra");
-        else           skills.add(Skill.getCookSkill());
+        else {
+            skills.add(Skill.getCookSkill());
+            skillCount--;
+        }
 
         for (int i = 0; i < cats.size() && i < skillCount; i++) {
             skills.add(Skill.getRandomSkill(cats.get(i)));
         }
 
-        for (int i = 4; i < skillCount; i++ ) {
+        for (int i = 4; i <= skillCount; i++ ) {
             skills.add(Skill.getRandomSkill());
         }
 
         //endregion
 
         boolean pickSafe = Utils.roll(2) == 1;
+        if (!pickSafe) addDeathStrike("You picked from the unsafe ARMOUR pile.");
         armour = Lookup.getRandomArmour(pickSafe);
         adjustStats();
 
         pickSafe = Utils.roll(2) == 1;
+        if (!pickSafe) addDeathStrike("You picked from the unsafe WEAPON pile.");
         right_paw = Lookup.getRandomWeapon(pickSafe);
         adjustStats();
 
         pickSafe = Utils.roll(2) == 1;
-        right_paw = Lookup.getRandomGear(pickSafe);
+        if (!pickSafe) addDeathStrike("You picked from the unsafe GEAR pile.");
+        wrong_paw = Lookup.getRandomGear(pickSafe);
         adjustStats();
 
         //region Update UI
 
-        setTextViewValue(R.id.brawn_value,  Integer.toString(iBrawn));
-        setTextViewValue(R.id.ego_value,    Integer.toString(iEgo));
-        setTextViewValue(R.id.reflex_value, Integer.toString(iReflexes));
-        setTextViewValue(R.id.extra_value,  Integer.toString(iExtraneous));
+        setTextViewValue(R.id.brawn_value,  Integer.toString(brawn));
+        setTextViewValue(R.id.ego_value,    Integer.toString(ego));
+        setTextViewValue(R.id.reflex_value, Integer.toString(reflexes));
+        setTextViewValue(R.id.extra_value,  Integer.toString(extra));
 
         setTextViewValue(R.id.meat_value,    Integer.toString(iMeat));
         setTextViewValue(R.id.agility_value, Integer.toString(iAgility));
@@ -212,10 +226,22 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout v = (LinearLayout)findViewById(R.id.skills_layout);
         v.removeAllViews();
 
+        //region Skills
+
         TextView tv = new TextView(this);
-        tv.setText("Skills");
+        tv.setText(Html.fromHtml("<u>Skills</u>"));
         tv.setTextSize(30);
         v.addView(tv);
+
+
+
+        // Sort the skills by abilities
+        Collections.sort(skills, new Comparator<Skill>() {
+            @Override
+            public int compare(Skill lhs, Skill rhs) {
+                return lhs.getAbility().compareTo(rhs.getAbility());
+            }
+        });
 
         // Auto-generate the skill textviews
         for (Skill s : skills) {
@@ -245,6 +271,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //endregion
+
+        //endregion
+
+        showDeathStrikes();
     }
 
     private void setTextViewValue(int id, String text) {
@@ -290,5 +320,33 @@ public class MainActivity extends AppCompatActivity {
     // adjust stats if gear allows for it
     private void adjustStats() {
         // TODO: adjust stats based on gear
+    }
+
+    private void addDeathStrike(String message) {
+        iDeathStrikes++;
+        mDeathStrikes.add(new DeathStrike(message, "+" + iDeathStrikes));
+    }
+
+    private void showDeathStrikes() {
+
+        if (mDeathStrikes.size() == 0) return;
+        DeathStrike strike = mDeathStrikes.get(0);
+        mDeathStrikes.remove(strike);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Death Strike!")
+                .setMessage(strike.getReason() + "\n\nModifier: " + strike.getModifier() +
+                        "\n\nRoll a 13 or less to live")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton("Life", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        showDeathStrikes();
+                    }
+                })
+                .setNegativeButton("Death", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        Toast.makeText(MainActivity.this, "You dead! Notify the Mayor!", Toast.LENGTH_SHORT).show();
+                    }
+                }).show();
     }
 }

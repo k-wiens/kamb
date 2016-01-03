@@ -28,6 +28,12 @@ public class Skill extends BaseItem {
 
     public static void init(boolean takeCook) {
         skills = new ArrayList<>();
+
+        skills.add(new Skill("Sport", "Some Kobolds are just naturally more athletic than others. \n\n" +
+                "Kobolds with the SPORT skill can leap, climb, vault, and perform any \n" +
+                "number of extreme physical activities.\n\nThe DIFFICULTY of SPORT rolls \n" +
+                "is determined by the Mayor.", "Brawn"));
+
         skills.add(new Skill("Shoot", "I can shoot", "Reflexes"));
         skills.add(new Skill("Bully", "I can bully", "Brawn"));
         skills.add(new Skill("Sage", "I can know things", "Ego"));
@@ -35,6 +41,9 @@ public class Skill extends BaseItem {
         skills.add(new Skill("Shoot", "I can shoot", "Reflexes"));
         skills.add(new Skill("Bully", "I can bully", "Brawn"));
         skills.add(new Skill("Sage", "I can know things", "Ego"));
+
+        skills.add(new Skill("Speak Human", "Speak human wordss", "Extra"));
+        skills.add(new Skill("Speak Critter", "Speak animal words", "Extra"));
 
         if (!takeCook)
             skills.add(cookSkill);
@@ -47,7 +56,10 @@ public class Skill extends BaseItem {
             if (s.getAbility().equals(category))
                 count++;
         }
-        int roll = Utils.roll(count) - 1;
+        int roll = Utils.roll(count);
+
+        Log.e("Skill", "Count: " + count);
+        Log.e("Skill", "Roll: " + roll);
         count = 0;
 
         for (Skill s : skills) {
@@ -59,7 +71,7 @@ public class Skill extends BaseItem {
             }
         }
 
-        Log.e("Skill", "shouldn't get here");
+        Log.e("Skill", "shouldn't get here: " + category);
         return null;
     }
 

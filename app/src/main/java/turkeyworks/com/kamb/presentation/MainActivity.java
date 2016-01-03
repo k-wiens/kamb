@@ -31,10 +31,15 @@ import java.util.Comparator;
 import java.util.List;
 
 import turkeyworks.com.kamb.Lookup;
+import turkeyworks.com.kamb.Objects.Armour;
 import turkeyworks.com.kamb.Objects.BaseItem;
+import turkeyworks.com.kamb.Objects.Bogey;
 import turkeyworks.com.kamb.Objects.DeathStrike;
+import turkeyworks.com.kamb.Objects.Edge;
+import turkeyworks.com.kamb.Objects.Gear;
 import turkeyworks.com.kamb.Objects.MyTextView;
 import turkeyworks.com.kamb.Objects.Skill;
+import turkeyworks.com.kamb.Objects.Weapon;
 import turkeyworks.com.kamb.R;
 import turkeyworks.com.kamb.Utils;
 
@@ -54,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
     private String sBogey1;
     private String sBogey2;
 
-    private String right_paw;
-    private String wrong_paw;
-    private String armour;
+    private BaseItem right_paw;
+    private BaseItem wrong_paw;
+    private BaseItem armour;
 
     private int iDeathStrikes;
     private ArrayList<DeathStrike> mDeathStrikes;
@@ -138,14 +143,14 @@ public class MainActivity extends AppCompatActivity {
         iAgility = Utils.getAbility(reflexes);
 
         // get edges
-        sEdge1 = Lookup.getRandomEdge();
-        sEdge2 = Lookup.getRandomEdge();
-        while(sEdge2.equals(sEdge1)) sEdge2 = Lookup.getRandomEdge();
+        sEdge1 = Edge.getRandomEdge();
+        sEdge2 = Edge.getRandomEdge();
+        while(sEdge2.equals(sEdge1)) sEdge2 = Edge.getRandomEdge();
 
         // get bogeys
-        sBogey1 = Lookup.getRandomBogey();
-        sBogey2 = Lookup.getRandomBogey();
-        while(sBogey1.equals(sBogey2)) sBogey2 = Lookup.getRandomEdge();
+        sBogey1 = Bogey.getRandomBogey();
+        sBogey2 = Bogey.getRandomBogey();
+        while(sBogey1.equals(sBogey2)) sBogey2 = Bogey.getRandomBogey();
 
 
         // pick skills
@@ -185,18 +190,18 @@ public class MainActivity extends AppCompatActivity {
 
         boolean pickSafe = Utils.roll(2) == 1;
         if (!pickSafe) addDeathStrike("You picked from the unsafe ARMOUR pile.");
-        armour = Lookup.getRandomArmour(pickSafe);
-        adjustStats();
+        armour = Armour.getRandomArmour(pickSafe);
+        adjustStats(armour);
 
         pickSafe = Utils.roll(2) == 1;
         if (!pickSafe) addDeathStrike("You picked from the unsafe WEAPON pile.");
-        right_paw = Lookup.getRandomWeapon(pickSafe);
-        adjustStats();
+        right_paw = Weapon.getRandomWeapon(pickSafe);
+        adjustStats(right_paw);
 
         pickSafe = Utils.roll(2) == 1;
         if (!pickSafe) addDeathStrike("You picked from the unsafe GEAR pile.");
-        wrong_paw = Lookup.getRandomGear(pickSafe);
-        adjustStats();
+        wrong_paw = Gear.getRandomGear(pickSafe);
+        adjustStats(wrong_paw);
 
         //region Update UI
 
@@ -219,20 +224,68 @@ public class MainActivity extends AppCompatActivity {
         setTextViewValue(R.id.ds_value, Integer.toString(iDeathStrikes));
         setTextViewValue(R.id.hp_value, Integer.toString(hit_points));
 
-        setTextViewValue(R.id.armour_value, armour);
-        setTextViewValue(R.id.r_paw_value, right_paw);
-        setTextViewValue(R.id.w_paw_value, wrong_paw);
+        //region Gear
 
-        LinearLayout v = (LinearLayout)findViewById(R.id.skills_layout);
-        v.removeAllViews();
+        // add armour info
+        LinearLayout v = (LinearLayout)findViewById(R.id.armour_row);
+        v.removeView(v.findViewById(R.id.armour_value));
+
+        MyTextView mtv = new MyTextView(this, armour);
+        mtv.setText(armour.getName());
+        mtv.setId(R.id.armour_value);
+        mtv.setTextSize(30);
+        mtv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showItemInfo(v);
+            }
+        });
+        v.addView(mtv);
+
+        // add right paw value
+        v = (LinearLayout)findViewById(R.id.r_paw_row);
+        v.removeView(v.findViewById(R.id.r_paw_value));
+
+        mtv = new MyTextView(this, right_paw);
+        mtv.setText(right_paw.getName());
+        mtv.setId(R.id.r_paw_value);
+        mtv.setTextSize(30);
+        mtv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showItemInfo(v);
+            }
+        });
+        v.addView(mtv);
+
+        // add wrong paw info
+        v = (LinearLayout)findViewById(R.id.w_paw_row);
+        v.removeView(v.findViewById(R.id.w_paw_value));
+
+        mtv = new MyTextView(this, wrong_paw);
+        mtv.setText(wrong_paw.getName());
+        mtv.setId(R.id.w_paw_value);
+        mtv.setTextSize(30);
+        mtv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showItemInfo(v);
+            }
+        });
+        v.addView(mtv);
+
+        //endregion
 
         //region Skills
 
+        v = (LinearLayout)findViewById(R.id.skills_layout);
+        v.removeAllViews();
+
+        // add title
         TextView tv = new TextView(this);
         tv.setText(Html.fromHtml("<u>Skills</u>"));
         tv.setTextSize(30);
         v.addView(tv);
-
 
 
         // Sort the skills by abilities
@@ -246,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
         // Auto-generate the skill textviews
         for (Skill s : skills) {
 
-            MyTextView mtv = new MyTextView(this, s);
+            mtv = new MyTextView(this, s);
 
             SpannableString span1 = new SpannableString(s.getName());
             int textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 30F, this.getResources().getDisplayMetrics());
@@ -318,8 +371,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // adjust stats if gear allows for it
-    private void adjustStats() {
-        // TODO: adjust stats based on gear
+    private void adjustStats(BaseItem item) {
+        switch (item.getName()) {
+            case "Kite Shield":
+                // TODO: do stuff!
+                break;
+        }
     }
 
     private void addDeathStrike(String message) {

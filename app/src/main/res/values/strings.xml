@@ -25,7 +25,7 @@
     <string name="defaultEdge">Night Vision</string>
     <string name="defaultBogey">Stupid as Heck</string>
 
-    <string name="skills">Skills</string>
+    <string name="skills"><u>Skills</u></string>
 
     <string name="name">Name:</string>
     <string name="hit_points">Hit Points:</string>

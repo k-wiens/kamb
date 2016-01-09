@@ -73,7 +73,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.setTitle("Kobolds Ate My Baby!");
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        setTitle("Kobolds Ate My Baby!");
         loadVictoryPoints();
 
         // add text watcher so we know when victory points are changed

@@ -20,6 +20,10 @@
         <activity
             android:name=".presentation.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".presentation.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

@@ -36,4 +36,21 @@
     <string name="armour">Armour:</string>
     <string name="right_paw">Right Paw:</string>
     <string name="wrong_paw">Wrong Paw:</string>
+
+
+    <!-- Strings related to Settings -->
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_header_general">General</string>
+    <string name="pref_title_sync_wifi">Only sync over WiFi</string>
+    <string name="pref_title_languages">Transcription Language</string>
+    <string-array name="pref_languages_titles">
+        <item>English</item>
+        <item>French</item>
+        <item>German</item>
+    </string-array>
+    <string-array name="pref_languages_values">
+        <item>en_US</item>
+        <item>fr_FR</item>
+        <item>de_DE</item>
+    </string-array>
 </resources>

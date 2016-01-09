@@ -33,17 +33,36 @@ public class Skill extends BaseItem {
                 "Kobolds with the SPORT skill can leap, climb, vault, and perform any \n" +
                 "number of extreme physical activities.\n\nThe DIFFICULTY of SPORT rolls \n" +
                 "is determined by the Mayor.", "Brawn"));
-
-        skills.add(new Skill("Shoot", "I can shoot", "Reflexes"));
         skills.add(new Skill("Bully", "I can bully", "Brawn"));
-        skills.add(new Skill("Sage", "I can know things", "Ego"));
+        skills.add(new Skill("Duel!", "I can bully", "Brawn"));
+        skills.add(new Skill("Heft!", "I can bully", "Brawn"));
+        skills.add(new Skill("Lift", "I can bully", "Brawn"));
+        skills.add(new Skill("Swim", "I can bully", "Brawn"));
+        skills.add(new Skill("Wrassle", "I can bully", "Brawn"));
 
-        skills.add(new Skill("Shoot", "I can shoot", "Reflexes"));
-        skills.add(new Skill("Bully", "I can bully", "Brawn"));
-        skills.add(new Skill("Sage", "I can know things", "Ego"));
+        skills.add(new Skill("Fear!", "I can know things", "Ego"));
+        skills.add(new Skill("Lackey!", "I can know things", "Ego"));
+        skills.add(new Skill("Sage!", "I can know things", "Ego"));
+        skills.add(new Skill("Shoot", "I can know things", "Ego"));
+        skills.add(new Skill("Speak Human", "I can know things", "Ego"));
+        skills.add(new Skill("Trap", "I can know things", "Ego"));
+        skills.add(new Skill("Tinker!", "I can know things", "Ego"));
 
-        skills.add(new Skill("Speak Human", "Speak human wordss", "Extra"));
+        skills.add(new Skill("Fast", "I can shoot", "Reflexes"));
+        skills.add(new Skill("Hide", "I can shoot", "Reflexes"));
+        skills.add(new Skill("Nurture", "I can shoot", "Reflexes"));
+        skills.add(new Skill("Ride", "I can shoot", "Reflexes"));
+        skills.add(new Skill("Sneak", "I can shoot", "Reflexes"));
+        skills.add(new Skill("Steal", "I can shoot", "Reflexes"));
+        skills.add(new Skill("Wiggle", "I can shoot", "Reflexes"));
+
+        skills.add(new Skill("Bard", "Speak human wordss", "Extra"));
+        skills.add(new Skill("Dungeon", "Speak animal words", "Extra"));
+        skills.add(new Skill("Nature", "Speak animal words", "Extra"));
+        skills.add(new Skill("Perform", "Speak animal words", "Extra"));
         skills.add(new Skill("Speak Critter", "Speak animal words", "Extra"));
+        skills.add(new Skill("Track", "Speak animal words", "Extra"));
+        skills.add(new Skill("Trade!", "Speak animal words", "Extra"));
 
         if (!takeCook)
             skills.add(cookSkill);
@@ -58,8 +77,6 @@ public class Skill extends BaseItem {
         }
         int roll = Utils.roll(count);
 
-        Log.e("Skill", "Count: " + count);
-        Log.e("Skill", "Roll: " + roll);
         count = 0;
 
         for (Skill s : skills) {

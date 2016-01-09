@@ -8,13 +8,14 @@ import turkeyworks.com.kamb.Utils;
  */
 public class Edge extends BaseItem {
 
+
     public Edge(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    public static String getRandomEdge() {
+    public static Edge getRandomEdge() {
         int roll = Utils.roll(Constants.Edges.length) - 1;
-        return Constants.Edges[roll][0];
+        return Constants.Edges[roll];
     }
 }

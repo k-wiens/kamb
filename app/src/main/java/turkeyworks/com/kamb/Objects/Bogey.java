@@ -13,8 +13,8 @@ public class Bogey extends BaseItem {
         this.description = description;
     }
 
-    public static String getRandomBogey() {
+    public static Bogey getRandomBogey() {
         int roll = Utils.roll(Constants.Bogeys.length) - 1;
-        return Constants.Bogeys[roll][0];
+        return Constants.Bogeys[roll];
     }
 }

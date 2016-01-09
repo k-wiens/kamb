@@ -4,78 +4,118 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/armour"
+        android:textSize="30sp"/>
 
-        <!-- 2 columns -->
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dip"
-            android:id="@+id/armour_row">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/armour"
-                android:textSize="30sp"/>
+    <turkeyworks.com.kamb.Objects.MyTextView
+        android:id="@+id/armour_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_set"
+        android:textSize="30sp"
+        android:onClick="showItemInfo"/>
 
-            <TextView
-                android:id="@+id/armour_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/not_set"
-                android:textSize="30sp"
-                android:onClick="showInfo"/>
-        </TableRow>
-    </TableLayout>
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <!-- 2 columns -->
-        <TableRow
+        <TableRow>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dip"
-            android:id="@+id/r_paw_row">
+            android:text="@string/hit_points"
+            android:textSize="30sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/right_paw"
-                android:textSize="30sp"/>
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:text="+"
+            android:textSize="20sp"
+            android:onClick="addArmourHP"
+            />
 
-            <TextView
-                android:id="@+id/r_paw_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/not_set"
-                android:textSize="30sp"
-                android:onClick="showInfo"/>
-        </TableRow>
-
-        <!-- 2 columns -->
-        <TableRow
+        <EditText
+            android:id="@+id/armour_hp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dip"
-            android:id="@+id/w_paw_row">
+            android:inputType="number"
+            android:textSize="30sp"
+            android:text="@string/zero"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/wrong_paw"
-                android:textSize="30sp"/>
-
-            <TextView
-                android:id="@+id/w_paw_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/not_set"
-                android:textSize="30sp"
-                android:onClick="showInfo"/>
-        </TableRow>
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:text="-"
+            android:textSize="20sp"
+            android:onClick="loseArmourHP"
+            /></TableRow>
     </TableLayout>
+
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/drop_item"
+        android:textSize="30sp"
+        android:onClick="dropArmour"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/right_paw"
+        android:textSize="30sp"/>
+
+    <turkeyworks.com.kamb.Objects.MyTextView
+        android:id="@+id/r_paw_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_set"
+        android:textSize="30sp"
+        android:onClick="showItemInfo"/>
+
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/drop_item"
+        android:textSize="30sp"
+        android:onClick="dropRightPaw"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wrong_paw"
+        android:textSize="30sp"/>
+
+    <turkeyworks.com.kamb.Objects.MyTextView
+        android:id="@+id/w_paw_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_set"
+        android:textSize="30sp"
+        android:onClick="showItemInfo"/>
+
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/drop_item"
+        android:textSize="30sp"
+        android:onClick="dropWrongPaw"/>
 </LinearLayout>

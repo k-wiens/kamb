@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableString;
@@ -30,13 +30,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import turkeyworks.com.kamb.Lookup;
+import turkeyworks.com.kamb.Constants;
 import turkeyworks.com.kamb.Objects.Armour;
 import turkeyworks.com.kamb.Objects.BaseItem;
 import turkeyworks.com.kamb.Objects.Bogey;
 import turkeyworks.com.kamb.Objects.DeathStrike;
 import turkeyworks.com.kamb.Objects.Edge;
 import turkeyworks.com.kamb.Objects.Gear;
+import turkeyworks.com.kamb.Objects.Magic;
 import turkeyworks.com.kamb.Objects.MyTextView;
 import turkeyworks.com.kamb.Objects.Skill;
 import turkeyworks.com.kamb.Objects.Weapon;
@@ -45,28 +46,21 @@ import turkeyworks.com.kamb.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String TAG = "MainActivity";
+    // TODO: make layout responsive to rotation
+
+    private final static String TAG = MainActivity.class.getName();
 
     private String PREF_VP = "victoryPoints";
 
     private int iMaxHP = 0;
-
-    private int iMeat    = 0;
-    private int iCunning = 0;
-    private int iLuck    = 0;
-    private int iAgility = 0;
-
-    private String sEdge1;
-    private String sEdge2;
-    private String sBogey1;
-    private String sBogey2;
+    private int iMaxArmourHP = 0;
 
     private BaseItem right_paw;
     private BaseItem wrong_paw;
-    private BaseItem armour;
+    private Armour armour;
 
     private int iDeathStrikes;
-    private ArrayList<DeathStrike> mDeathStrikes;
+    private ArrayList<DeathStrike> mDeathStrikes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +93,22 @@ public class MainActivity extends AppCompatActivity {
                 saveVictoryPoints(points);
             }
         });
+
+        //region Defaults
+
+        MyTextView mtv = (MyTextView) findViewById(R.id.edgeDefault1);
+        mtv.setItem(Constants.defaults[0]);
+
+        mtv = (MyTextView) findViewById(R.id.edgeDefault2);
+        mtv.setItem(Constants.defaults[1]);
+
+        mtv = (MyTextView) findViewById(R.id.bogeyDefault1);
+        mtv.setItem(Constants.defaults[2]);
+
+        mtv = (MyTextView) findViewById(R.id.bogeyDefault2);
+        mtv.setItem(Constants.defaults[3]);
+
+        //endregion
     }
 
     @Override
@@ -117,8 +127,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-         //   Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-           // startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
         else if (id == R.id.action_generate) {
@@ -142,30 +152,29 @@ public class MainActivity extends AppCompatActivity {
         iMaxHP = brawn;
 
         // derive abilities
-        iMeat    = Utils.getAbility(brawn);
-        iCunning = Utils.getAbility(ego);
-        iLuck    = Utils.getAbility(extra);
-        iAgility = Utils.getAbility(reflexes);
+        int iMeat    = Utils.getAbility(brawn);
+        int iCunning = Utils.getAbility(ego);
+        int iLuck    = Utils.getAbility(extra);
+        int iAgility = Utils.getAbility(reflexes);
 
-        // get edges
-        sEdge1 = Edge.getRandomEdge();
-        sEdge2 = Edge.getRandomEdge();
-        while(sEdge2.equals(sEdge1)) sEdge2 = Edge.getRandomEdge();
-
-        // get bogeys
-        sBogey1 = Bogey.getRandomBogey();
-        sBogey2 = Bogey.getRandomBogey();
-        while(sBogey1.equals(sBogey2)) sBogey2 = Bogey.getRandomBogey();
+        // get edge/bogey
+        BaseItem edge  = Edge.getRandomEdge();
+        BaseItem bogey = Bogey.getRandomBogey();
+        if (edge.getName().equals("Extra Padding"))
+        iMaxHP += Utils.roll(6);
 
 
         // pick skills
         //region Skills
 
+        boolean haveSportSkill = false;
+        boolean haveLiftSkill = false;
+
         // TODO: check with user if they want 7 points with an Ego of 5
         // TODO: check with user if they always want to take Cook
 
-        boolean takeSeven = false;
-        boolean takeCook = true;
+        boolean takeSeven = Utils.roll(2) == 1;
+        boolean takeCook = Utils.roll(2) == 1;
 
         Skill.init(takeCook);
         List<Skill> skills = new ArrayList<>();
@@ -173,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         int skillCount = Math.min(ego, 6);
         if (takeSeven && skillCount == 5) {
             skillCount = 7;
-            addDeathStrike("Taking 7 skill points from 5 Ego");
+            addDeathStrike("Taking 7 skill points from 5 Ego", true);
         }
 
         ArrayList<String> cats = new ArrayList<>(Arrays.asList("Brawn", "Ego", "Reflexes"));
@@ -191,24 +200,55 @@ public class MainActivity extends AppCompatActivity {
             skills.add(Skill.getRandomSkill());
         }
 
+        boolean haveCookSkill = false;
+        Magic magic = null;
+        for (Skill s : skills) {
+            String name = s.getName();
+            switch (name) {
+                case "Lackey!":
+                    magic = Magic.getRandomMagic();
+                    break;
+                case "Sport":
+                    haveSportSkill = true;
+                    break;
+                case "Lift":
+                    haveLiftSkill = true;
+                    break;
+                case "Cook":
+                    haveCookSkill = true;
+            }
+        }
+
+        if (!haveCookSkill) addDeathStrike("You didn't take the cook skill", true);
+
         //endregion
 
+        // TODO: check for perform skill, for pretending to have a skill
+
         boolean pickSafe = Utils.roll(2) == 1;
-        if (!pickSafe) addDeathStrike("You picked from the unsafe ARMOUR pile.");
-        armour = Armour.getRandomArmour(pickSafe);
+        if (pickSafe) {
+            armour = Armour.getRandomSafeArmour(haveSportSkill);
+        }
+        else {
+            armour = Armour.getRandomDangerArmour(haveLiftSkill);
+            addDeathStrike("You picked from the unsafe ARMOUR pile.", true);
+        }
         adjustStats(armour);
+        iMaxArmourHP = armour.getHP();
 
         pickSafe = Utils.roll(2) == 1;
-        if (!pickSafe) addDeathStrike("You picked from the unsafe WEAPON pile.");
+        if (!pickSafe) addDeathStrike("You picked from the unsafe WEAPON pile.", true);
         right_paw = Weapon.getRandomWeapon(pickSafe);
         adjustStats(right_paw);
 
         pickSafe = Utils.roll(2) == 1;
-        if (!pickSafe) addDeathStrike("You picked from the unsafe GEAR pile.");
+        if (!pickSafe) addDeathStrike("You picked from the unsafe GEAR pile.", true);
         wrong_paw = Gear.getRandomGear(pickSafe);
         adjustStats(wrong_paw);
 
         //region Update UI
+
+        //region Generic Values
 
         setTextViewValue(R.id.brawn_value,  Integer.toString(brawn));
         setTextViewValue(R.id.ego_value,    Integer.toString(ego));
@@ -220,70 +260,39 @@ public class MainActivity extends AppCompatActivity {
         setTextViewValue(R.id.luck_value,    Integer.toString(iLuck));
         setTextViewValue(R.id.cunning_value, Integer.toString(iCunning));
 
-        setTextViewValue(R.id.edge1, sEdge1);
-        setTextViewValue(R.id.edge2, sEdge2);
-        setTextViewValue(R.id.bogey1, sBogey1);
-        setTextViewValue(R.id.bogey2, sBogey2);
-
         setTextViewValue(R.id.name_value, "");
-        setTextViewValue(R.id.ds_value, Integer.toString(iDeathStrikes));
-        setTextViewValue(R.id.hp_value, Integer.toString(iMaxHP));
+        setTextViewValue(R.id.ds_value,  Integer.toString(iDeathStrikes));
+        setTextViewValue(R.id.hp_value,  Integer.toString(iMaxHP));
+        setTextViewValue(R.id.armour_hp, Integer.toString(iMaxArmourHP));
+
+        //endregion
+
+        //region Edges/Bogeys
+
+        MyTextView mtv = (MyTextView) findViewById(R.id.edgeRandom);
+        mtv.setItem(edge);
+
+        mtv = (MyTextView) findViewById(R.id.bogeyRandom);
+        mtv.setItem(bogey);
+
+        //endregion
 
         //region Gear
 
-        // add armour info
-        LinearLayout v = (LinearLayout)findViewById(R.id.armour_row);
-        v.removeView(v.findViewById(R.id.armour_value));
+        mtv = (MyTextView) findViewById(R.id.armour_value);
+        mtv.setItem(armour);
 
-        MyTextView mtv = new MyTextView(this, armour);
-        mtv.setText(armour.getName());
-        mtv.setId(R.id.armour_value);
-        mtv.setTextSize(30);
-        mtv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showItemInfo(v);
-            }
-        });
-        v.addView(mtv);
+        mtv = (MyTextView) findViewById(R.id.r_paw_value);
+        mtv.setItem(right_paw);
 
-        // add right paw value
-        v = (LinearLayout)findViewById(R.id.r_paw_row);
-        v.removeView(v.findViewById(R.id.r_paw_value));
-
-        mtv = new MyTextView(this, right_paw);
-        mtv.setText(right_paw.getName());
-        mtv.setId(R.id.r_paw_value);
-        mtv.setTextSize(30);
-        mtv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showItemInfo(v);
-            }
-        });
-        v.addView(mtv);
-
-        // add wrong paw info
-        v = (LinearLayout)findViewById(R.id.w_paw_row);
-        v.removeView(v.findViewById(R.id.w_paw_value));
-
-        mtv = new MyTextView(this, wrong_paw);
-        mtv.setText(wrong_paw.getName());
-        mtv.setId(R.id.w_paw_value);
-        mtv.setTextSize(30);
-        mtv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showItemInfo(v);
-            }
-        });
-        v.addView(mtv);
+        mtv = (MyTextView) findViewById(R.id.w_paw_value);
+        mtv.setItem(wrong_paw);
 
         //endregion
 
         //region Skills
 
-        v = (LinearLayout)findViewById(R.id.skills_layout);
+        LinearLayout v = (LinearLayout)findViewById(R.id.skills_layout);
         v.removeAllViews();
 
         // add title
@@ -310,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
             int textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 30F, this.getResources().getDisplayMetrics());
             span1.setSpan(new AbsoluteSizeSpan(textSize), 0, s.getName().length(), 0);
 
-            String st = "(" + s.getAbility() + ")";
+            String st = "   (" + s.getAbility() + ")";
             SpannableString span2 = new SpannableString(st);
             textSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 20F, this.getResources().getDisplayMetrics());
             span2.setSpan(new AbsoluteSizeSpan(textSize), 0, st.length(), 0);
@@ -325,6 +334,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            v.addView(mtv);
+        }
+
+        if (magic != null) {
+            mtv = new MyTextView(this, magic);
+            String text = "\nSpell:\n" + magic.getName();
+            mtv.setText(text);
+            mtv.setTextSize(30);
+            mtv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showItemInfo(v);
+                }
+            });
             v.addView(mtv);
         }
 
@@ -355,20 +378,15 @@ public class MainActivity extends AppCompatActivity {
         setTextViewValue(R.id.vp_value, Integer.toString(points));
     }
 
-    public void showInfo(View view) {
-        String title = ((TextView) view).getText().toString();
-        String info = Lookup.getInfo(title);
-
-        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-        alertDialog.setTitle(title);
-        alertDialog.setMessage(info);
-        alertDialog.show();
-    }
-
     public void showItemInfo(View view) {
+        String title = "Item info";
+        String info = "No info to display.";
+
         BaseItem item = ((MyTextView) view).getItem();
-        String title = item.getName();
-        String info = item.getDescription();
+        if (item != null) {
+            title = item.getName();
+            info = item.getDescription();
+        }
 
         AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         alertDialog.setTitle(title);
@@ -385,8 +403,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void addDeathStrike(String message) {
-        iDeathStrikes++;
+    private void addDeathStrike(String message, boolean increment) {
+        if (increment) iDeathStrikes++;
         mDeathStrikes.add(new DeathStrike(message, "+" + iDeathStrikes));
     }
 
@@ -397,7 +415,7 @@ public class MainActivity extends AppCompatActivity {
         mDeathStrikes.remove(strike);
 
         new AlertDialog.Builder(this)
-                .setTitle("Death Strike!")
+                .setTitle("Death Cheque!")
                 .setMessage("Cause: " + strike.getReason() + "\n\nModifier: " + strike.getModifier() +
                         "\n\nRoll 2d6 and get 13 or less to live")
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -415,8 +433,7 @@ public class MainActivity extends AppCompatActivity {
 
     // region Value Modifiers
 
-    // TODO: armour needs hit points too
-    // TODO: if armour still has hit points, warn user if they modify actual hit points
+    // TODO: instead of dropping items, offer a drop down of various items, inluding an empty slot
 
     public void addHP(View view) {
         String hp_text = ((TextView) findViewById(R.id.hp_value)).getText().toString();
@@ -425,25 +442,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loseHP(View view) {
-        String hp_text = ((TextView) findViewById(R.id.hp_value)).getText().toString();
+
+        // check if armour still has HP, warn user to not be stupid
+        String ahp_text = ((TextView) findViewById(R.id.armour_hp)).getText().toString();
+        int ahp = Integer.parseInt(ahp_text);
+        if (ahp > 0) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Stupid Kobold!")
+                    .setMessage("Your armour still has hit points! Decrease those first.")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+        else {
+            String hp_text = ((TextView) findViewById(R.id.hp_value)).getText().toString();
+            int hp = Integer.parseInt(hp_text);
+            setTextViewValue(R.id.hp_value, Integer.toString(Math.max(--hp, 0)));
+        }
+    }
+
+    public void addArmourHP(View view) {
+        String hp_text = ((TextView) findViewById(R.id.armour_hp)).getText().toString();
         int hp = Integer.parseInt(hp_text);
-        setTextViewValue(R.id.hp_value, Integer.toString(Math.max(--hp, 0)));
+        setTextViewValue(R.id.armour_hp, Integer.toString(Math.min(++hp, iMaxArmourHP)));
+    }
+
+    public void loseArmourHP(View view) {
+        String hp_text = ((TextView) findViewById(R.id.armour_hp)).getText().toString();
+        int hp = Integer.parseInt(hp_text);
+        setTextViewValue(R.id.armour_hp, Integer.toString(Math.max(--hp, 0)));
     }
 
     public void addDeathStrike(View view) {
-        String ds_text = ((TextView) findViewById(R.id.ds_value)).getText().toString();
-        int ds = Integer.parseInt(ds_text);
-        setTextViewValue(R.id.ds_value, Integer.toString(++ds));
 
         // alert user to roll death check
-        addDeathStrike("User action");
+        addDeathStrike("User action", true);
         showDeathStrikes();
+
+        setTextViewValue(R.id.ds_value, Integer.toString(iDeathStrikes));
     }
 
     public void loseDeathStrike(View view) {
-        String ds_text = ((TextView) findViewById(R.id.ds_value)).getText().toString();
-        int ds = Integer.parseInt(ds_text);
-        setTextViewValue(R.id.ds_value, Integer.toString(Math.max(--ds, 0)));
+        if (iDeathStrikes == 0) return;
+        iDeathStrikes--;
+
+        // alert user to roll death check
+        addDeathStrike("User action", false);
+        showDeathStrikes();
+
+        setTextViewValue(R.id.ds_value, Integer.toString(Math.max(iDeathStrikes, 0)));
     }
 
     public void addVP(View view) {
@@ -456,6 +502,26 @@ public class MainActivity extends AppCompatActivity {
         String vp_text = ((TextView) findViewById(R.id.vp_value)).getText().toString();
         int vp = Integer.parseInt(vp_text);
         setTextViewValue(R.id.vp_value, Integer.toString(Math.max(--vp, 0)));
+    }
+
+    public void dropArmour(View view) {
+        armour = null;
+        iMaxArmourHP = 0;
+        MyTextView mtv = (MyTextView) findViewById(R.id.armour_value);
+        mtv.setItem(null);
+        setTextViewValue(R.id.armour_hp, "0");
+    }
+
+    public void dropRightPaw(View view) {
+        right_paw = null;
+        MyTextView mtv = (MyTextView) findViewById(R.id.r_paw_value);
+        mtv.setItem(null);
+    }
+
+    public void dropWrongPaw(View view) {
+        wrong_paw = null;
+        MyTextView mtv = (MyTextView) findViewById(R.id.w_paw_value);
+        mtv.setItem(null);
     }
 
     // endregion

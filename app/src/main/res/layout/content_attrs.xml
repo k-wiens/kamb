@@ -10,26 +10,26 @@
         android:layout_height="wrap_content"
         android:text="@string/edges"
         android:textSize="30sp"/>
-    <TextView
+    <turkeyworks.com.kamb.Objects.MyTextView
+        android:id="@+id/edgeDefault1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/defaultEdge"
         android:textSize="30sp"
-        android:onClick="showInfo"/>
-    <TextView
-        android:id="@+id/edge1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/not_set"
-        android:textSize="30sp"
-        android:onClick="showInfo"/>
-    <TextView
-        android:id="@+id/edge2"
+        android:onClick="showItemInfo"/>
+    <turkeyworks.com.kamb.Objects.MyTextView
+        android:id="@+id/edgeDefault2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/not_set"
         android:textSize="30sp"
-        android:onClick="showInfo"/>
+        android:onClick="showItemInfo"/>
+    <turkeyworks.com.kamb.Objects.MyTextView
+        android:id="@+id/edgeRandom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_set"
+        android:textSize="30sp"
+        android:onClick="showItemInfo"/>
 
     <!-- Bogeys -->
     <TextView
@@ -38,24 +38,24 @@
         android:layout_marginTop="20dp"
         android:text="@string/bogeys"
         android:textSize="30sp"/>
-    <TextView
+    <turkeyworks.com.kamb.Objects.MyTextView
+        android:id="@+id/bogeyDefault1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/defaultBogey"
         android:textSize="30sp"
-        android:onClick="showInfo"/>
-    <TextView
-        android:id="@+id/bogey1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/not_set"
-        android:textSize="30sp"
-        android:onClick="showInfo"/>
-    <TextView
-        android:id="@+id/bogey2"
+        android:onClick="showItemInfo"/>
+    <turkeyworks.com.kamb.Objects.MyTextView
+        android:id="@+id/bogeyDefault2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/not_set"
         android:textSize="30sp"
-        android:onClick="showInfo"/>
+        android:onClick="showItemInfo"/>
+    <turkeyworks.com.kamb.Objects.MyTextView
+        android:id="@+id/bogeyRandom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/not_set"
+        android:textSize="30sp"
+        android:onClick="showItemInfo"/>
 </LinearLayout>

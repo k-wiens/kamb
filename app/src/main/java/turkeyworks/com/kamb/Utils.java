@@ -13,9 +13,8 @@ public class Utils {
         return rand.nextInt(num) + 1;
     }
 
+    // easiest way to scale this up012
     public static int getAbility(int num) {
-        if (num >= 9 && num < 13) return 3;
-        if (num >= 5 && num < 9)  return 2;
-        return 1;
+        return (num + 3) / 4;
     }
 }

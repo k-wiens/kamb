@@ -1,6 +1,7 @@
 package turkeyworks.com.kamb.Objects;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.widget.TextView;
 
 /*
@@ -15,10 +16,20 @@ public class MyTextView extends TextView {
         this.item = null;
     }
 
+    public MyTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.item = null;
+    }
+
     public MyTextView(Context context, BaseItem item) {
         super(context);
         this.item = item;
     }
 
+    public void setItem(BaseItem item) {
+        this.item = item;
+        String text = (item != null) ? item.getName() : "";
+        this.setText(text);
+    }
     public BaseItem getItem() {return item;}
 }
